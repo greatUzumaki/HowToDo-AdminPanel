@@ -10,9 +10,14 @@ export const SidebarData = [
     path: '/overview',
     icon: <AiIcons.AiFillHome />,
     iconClosed: <RiIcons.RiArrowDownSFill />,
-    iconOpen: <RiIcons.RiArrowUpSFill />,
+    iconOpened: <RiIcons.RiArrowUpSFill />,
+
     subNav: [
-      { title: 'Users', path: '/overview/users', icon: <IoIcons.IoIosPaper /> },
+      {
+        title: 'Users',
+        path: '/overview/users',
+        icon: <IoIcons.IoIosPaper />,
+      },
       {
         title: 'Revenue',
         path: '/overview/revenue',
@@ -23,19 +28,22 @@ export const SidebarData = [
   {
     title: 'Reports',
     path: '/reports',
-    icon: <AiIcons.AiFillHome />,
+    icon: <IoIcons.IoIosPaper />,
     iconClosed: <RiIcons.RiArrowDownSFill />,
-    iconOpen: <RiIcons.RiArrowUpSFill />,
+    iconOpened: <RiIcons.RiArrowUpSFill />,
+
     subNav: [
       {
         title: 'Reports',
         path: '/reports/reports1',
         icon: <IoIcons.IoIosPaper />,
+        cName: 'sub-nav',
       },
       {
         title: 'Reports 2',
         path: '/reports/reports2',
         icon: <IoIcons.IoIosPaper />,
+        cName: 'sub-nav',
       },
       {
         title: 'Reports 3',
@@ -53,5 +61,31 @@ export const SidebarData = [
     title: 'Team',
     path: '/team',
     icon: <IoIcons.IoMdPeople />,
+  },
+  {
+    title: 'Messages',
+    path: '/messages',
+    icon: <FaIcons.FaEnvelopeOpenText />,
+
+    iconClosed: <RiIcons.RiArrowDownSFill />,
+    iconOpened: <RiIcons.RiArrowUpSFill />,
+
+    subNav: [
+      {
+        title: 'Message 1',
+        path: '/messages/message1',
+        icon: <IoIcons.IoIosPaper />,
+      },
+      {
+        title: 'Message 2',
+        path: '/messages/message2',
+        icon: <IoIcons.IoIosPaper />,
+      },
+    ],
+  },
+  {
+    title: 'Support',
+    path: '/support',
+    icon: <IoIcons.IoMdHelpCircle />,
   },
 ];

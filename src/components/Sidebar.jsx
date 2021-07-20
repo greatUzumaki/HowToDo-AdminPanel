@@ -1,47 +1,52 @@
 import React, { useState } from 'react';
-import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import * as FaIcons from 'react-icons/fa';
 import * as AiIcons from 'react-icons/ai';
 import { SidebarData } from './SidebarData';
 import SubMenu from './SubMenu';
 import { IconContext } from 'react-icons/lib';
+import { styled } from '@material-ui/core/styles';
+import { makeStyles, Typography } from '@material-ui/core';
 
-const Nav = styled.div`
-  background: #15171c;
-  height: 80px;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-`;
+const useStyle = makeStyles({
+  title: { color: 'white', fontSize: '1.2rem' },
+});
 
-const NavIcon = styled(Link)`
-  margin-left: 2rem;
-  font-size: 2rem;
-  height: 80px;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-`;
+const Nav = styled('div')({
+  background: '#15171c',
+  height: 80,
+  display: 'flex',
+  justifyContent: 'flex-start',
+  alignItems: 'center',
+});
 
-const SidebarNav = styled.nav`
-  background: #15171c;
-  width: 250px;
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  position: fixed;
-  top: 0;
-  left: ${({ sidebar }) => (sidebar ? '0' : '-100%')};
-  transition: 350ms;
-  z-index: 10;
-`;
+const NavIcon = styled(Link)({
+  marginLeft: '2rem',
+  fontSize: '2rem',
+  height: 80,
+  display: 'flex',
+  justifyContent: 'flex-start',
+  alignItems: 'center',
+  marginRight: '2rem',
+});
 
-const SidebarWrap = styled.div`
-  width: 100%;
-`;
+const SidebarNav = styled('nav')({
+  background: '#15171c',
+  width: 250,
+  height: '100vh',
+  display: 'flex',
+  justifyContent: 'center',
+  position: 'fixed',
+  top: 0,
+  left: ({ sidebar }) => (sidebar ? '0' : '-100%'),
+  transition: '350ms',
+  zIndex: 10,
+});
+
+const SidebarWrap = styled('div')({ width: '100%' });
 
 const Sidebar = () => {
+  const style = useStyle();
   const [sidebar, setSidebar] = useState(false);
 
   const showSidebar = () => setSidebar(!sidebar);
@@ -50,14 +55,17 @@ const Sidebar = () => {
     <>
       <IconContext.Provider value={{ color: '#fff' }}>
         <Nav>
-          <NavIcon to='#'>
-            <FaIcons.FaBars onClick={showSidebar} />
+          <NavIcon to='#' onClick={showSidebar}>
+            <FaIcons.FaBars />
           </NavIcon>
+          <Typography className={style.title} variant='button'>
+            HowToDo Admin Panel
+          </Typography>
         </Nav>
         <SidebarNav sidebar={sidebar}>
           <SidebarWrap>
-            <NavIcon to='#'>
-              <AiIcons.AiOutlineClose onClick={showSidebar} />
+            <NavIcon to='#' onClick={showSidebar}>
+              <AiIcons.AiOutlineClose />
             </NavIcon>
             {SidebarData.map((item, index) => {
               return <SubMenu item={item} key={index} />;
