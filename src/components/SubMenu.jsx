@@ -1,6 +1,13 @@
-import { styled } from '@material-ui/core/styles';
+import { makeStyles, styled } from '@material-ui/core/styles';
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+
+const useStyles = makeStyles({
+  list: {
+    display: 'flex',
+    alignItems: 'center',
+  },
+});
 
 const SidebarLink = styled(Link)({
   display: 'flex',
@@ -11,7 +18,7 @@ const SidebarLink = styled(Link)({
   listStyle: 'none',
   height: 60,
   textDecoration: 'none',
-  fontSize: 18,
+  fontSize: 20,
   '&:hover': {
     background: '#252831',
     borderLeft: '4px solid #2283e6',
@@ -37,6 +44,7 @@ const DropdownLink = styled(Link)({
 });
 
 const SubMenu = ({ item }) => {
+  const classes = useStyles();
   const [subnav, setSubnav] = useState(false);
 
   const showSubnav = () => setSubnav(!subnav);
@@ -44,7 +52,7 @@ const SubMenu = ({ item }) => {
   return (
     <>
       <SidebarLink to={item.path} onClick={item.subNav && showSubnav}>
-        <div>
+        <div className={classes.list}>
           {item.icon}
           <SidebarLabel>{item.title}</SidebarLabel>
         </div>

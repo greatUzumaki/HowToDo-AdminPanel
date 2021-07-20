@@ -16,8 +16,11 @@ const Nav = styled('div')({
   background: '#15171c',
   height: 80,
   display: 'flex',
+  position: 'fixed',
+  width: '100%',
   justifyContent: 'flex-start',
   alignItems: 'center',
+  zIndex: 10,
 });
 
 const NavIcon = styled(Link)({
@@ -40,7 +43,7 @@ const SidebarNav = styled('nav')({
   top: 0,
   left: ({ sidebar }) => (sidebar ? '0' : '-100%'),
   transition: '350ms',
-  zIndex: 10,
+  zIndex: 9,
 });
 
 const SidebarWrap = styled('div')({ width: '100%' });
@@ -56,7 +59,7 @@ const Sidebar = () => {
       <IconContext.Provider value={{ color: '#fff' }}>
         <Nav>
           <NavIcon to='#' onClick={showSidebar}>
-            <FaIcons.FaBars />
+            {sidebar ? <AiIcons.AiOutlineClose /> : <FaIcons.FaBars />}
           </NavIcon>
           <Typography className={style.title} variant='button'>
             HowToDo Admin Panel
@@ -64,9 +67,7 @@ const Sidebar = () => {
         </Nav>
         <SidebarNav sidebar={sidebar}>
           <SidebarWrap>
-            <NavIcon to='#' onClick={showSidebar}>
-              <AiIcons.AiOutlineClose />
-            </NavIcon>
+            <NavIcon to='#' onClick={showSidebar}></NavIcon>
             {SidebarData.map((item, index) => {
               return <SubMenu item={item} key={index} />;
             })}
