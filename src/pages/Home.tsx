@@ -9,7 +9,7 @@ import {
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
   container: {
     display: 'flex',
     height: 'max-content',
@@ -38,6 +38,9 @@ const useStyles = makeStyles({
   },
   link: { textDecoration: 'none' },
   card: {
+    [theme.breakpoints.down('sm')]: {
+      width: 330,
+    },
     width: 500,
     height: 250,
     margin: 20,
@@ -51,11 +54,21 @@ const useStyles = makeStyles({
     flexDirection: 'column',
     width: '100%',
     height: ' 100%',
+    paddingBottom: '16px !important',
   },
-});
+  author: {
+    display: 'flex',
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    flexGrow: 1,
+  },
+  main: {
+    flexGrow: 1,
+  },
+}));
 
 const info = [
-  { name: 'Программирование awdawdwdwad' },
+  { name: 'Программие', date: '18.20 10:10', type: 'физ. лицо' },
   { name: 'awdawd' },
   { name: 'awdawd' },
   { name: 'awdawd' },
@@ -78,9 +91,32 @@ function Home() {
             <Link to='#' className={classes.link} key={index}>
               <Card elevation={3} className={classes.card}>
                 <CardContent className={classes.cardConten}>
-                  <Grid container>
-                    <Grid item></Grid>
-                    <Grid item></Grid>
+                  <Grid container direction='row'>
+                    <Grid item className={classes.author}>
+                      <Typography>{item.name}</Typography>
+                      <Typography
+                        variant='subtitle1'
+                        style={{ fontSize: 12, alignSelf: 'flex-end' }}
+                      >
+                        {item.type}
+                      </Typography>
+                    </Grid>
+                    <Grid item direction='row'>
+                      <Typography>{item.date}</Typography>
+                    </Grid>
+                  </Grid>
+                  <Divider />
+                  <Grid container direction='column' className={classes.main}>
+                    <Grid item direction='row' wrap='wrap'>
+                      <Typography>{item.name}</Typography>
+                    </Grid>
+                    <Grid item direction='row' wrap='wrap'>
+                      <Typography>{item.name}</Typography>
+                    </Grid>
+                  </Grid>
+                  <Divider />
+                  <Grid container direction='row'>
+                    <Grid item>Бизнес</Grid>
                   </Grid>
                 </CardContent>
               </Card>
