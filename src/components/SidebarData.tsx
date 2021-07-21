@@ -14,7 +14,7 @@ export const SidebarData = [
   },
   {
     title: 'Категории',
-    path: '/reports',
+    path: '/category',
     icon: <FaIcons.FaListUl />,
     iconClosed: <RiIcons.RiArrowDownSFill />,
     iconOpened: <RiIcons.RiArrowUpSFill />,

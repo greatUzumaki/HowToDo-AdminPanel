@@ -4,12 +4,10 @@
   padding: 0;
 }
 
-.home {
+.category {
   display: flex;
-  height: 90vh;
-  align-items: center;
-  justify-content: center;
   font-size: 3rem;
+  height: 90vh;
 }
 
 #root {

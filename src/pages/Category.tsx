@@ -1,56 +1,62 @@
 import {
   Card,
   CardContent,
-  Divider,
   Grid,
+  Icon,
   makeStyles,
   Typography,
 } from '@material-ui/core';
+import AcUnitIcon from '@material-ui/icons/AcUnit';
 import React from 'react';
 import { Link } from 'react-router-dom';
 
 const useStyles = makeStyles({
   container: {
     display: 'flex',
-    height: 'max-content',
-    padding: 20,
-    width: '100%',
-    justifyContent: 'center',
-    flexWrap: 'wrap',
-    alignItems: 'center',
-  },
-  pageTitle: {
-    fontSize: 40,
-    textAlign: 'center',
-  },
-  divider: {
-    width: '50%',
-  },
-  cardContainer: {
-    display: 'flex',
-    height: 'max-content',
-    padding: 20,
-    width: '100%',
     flexDirection: 'row',
+    height: 'max-content',
+    padding: 50,
+    width: '100%',
     justifyContent: 'center',
     flexWrap: 'wrap',
     alignItems: 'center',
   },
-  link: { textDecoration: 'none' },
   card: {
-    width: 500,
-    height: 250,
+    display: 'flex',
+    width: '5em',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
     margin: 20,
     '&:hover': {
-      transform: 'scale(1.05)',
+      transform: 'scale(1.1)',
       transition: '300ms',
     },
   },
-  cardConten: {
+  cardContent: {
     display: 'flex',
     flexDirection: 'column',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    height: '4em',
     width: '100%',
-    height: ' 100%',
+    textDecoration: 'none',
+  },
+  link: {
+    textDecoration: 'none',
+  },
+  text: {
+    fontSize: 18,
+  },
+  textContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    textAlign: 'center',
+  },
+  icon: {
+    width: 60,
+    height: 60,
   },
 });
 
@@ -66,21 +72,23 @@ const info = [
   { name: 'awdawd' },
 ];
 
-function Home() {
+function Category() {
   const classes = useStyles();
   return (
-    <Grid container direction='column' className={classes.container}>
-      <Typography className={classes.pageTitle}>Последние заявки</Typography>
-      <Divider className={classes.divider} />
-      <Grid item className={classes.cardContainer}>
+    <div className='category'>
+      <Grid item className={classes.container}>
         {info.map((item, index) => {
           return (
-            <Link to='#' className={classes.link} key={index}>
+            <Link to='/awd' className={classes.link} key={index}>
               <Card elevation={3} className={classes.card}>
-                <CardContent className={classes.cardConten}>
-                  <Grid container>
-                    <Grid item></Grid>
-                    <Grid item></Grid>
+                <CardContent className={classes.cardContent}>
+                  <Icon className={classes.icon}>
+                    <AcUnitIcon className={classes.icon} />
+                  </Icon>
+                  <Grid item className={classes.textContainer}>
+                    <Typography className={classes.text}>
+                      {item.name}
+                    </Typography>
                   </Grid>
                 </CardContent>
               </Card>
@@ -88,8 +96,8 @@ function Home() {
           );
         })}
       </Grid>
-    </Grid>
+    </div>
   );
 }
 
-export default Home;
+export default Category;

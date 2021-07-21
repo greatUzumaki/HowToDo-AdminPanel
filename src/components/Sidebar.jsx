@@ -16,7 +16,7 @@ const Nav = styled('div')({
   background: '#15171c',
   height: 80,
   display: 'flex',
-  position: 'fixed',
+  position: 'sticky',
   width: '100%',
   justifyContent: 'flex-start',
   alignItems: 'center',
