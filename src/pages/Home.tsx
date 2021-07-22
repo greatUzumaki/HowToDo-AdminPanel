@@ -114,7 +114,11 @@ function Home() {
                         <Typography>{item.customerName}</Typography>
                         <Typography
                           variant='subtitle1'
-                          style={{ fontSize: 12, alignSelf: 'flex-end' }}
+                          style={{
+                            fontSize: 12,
+                            alignSelf: 'flex-end',
+                            marginLeft: 5,
+                          }}
                         >
                           {item.customerType === 'entity'
                             ? 'организация'
