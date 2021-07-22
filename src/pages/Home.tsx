@@ -103,7 +103,7 @@ function Home() {
           requests.map((item, index) => {
             return (
               <Link
-                to={`/category/${item.id}`}
+                to={`/request/${item.id}`}
                 className={classes.link}
                 key={index}
               >

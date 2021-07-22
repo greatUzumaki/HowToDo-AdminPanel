@@ -10,6 +10,7 @@ import AllCategory from './pages/AllCategory';
 import Category from './pages/Category';
 import Home from './pages/Home';
 import LoginPage from './pages/LoginPage';
+import Request from './pages/Request';
 
 function App() {
   const { enqueueSnackbar } = useSnackbar();
@@ -42,7 +43,7 @@ function App() {
           <Route path='/category' exact component={AllCategory} />
           <Route path='/' exact component={LoginPage} />
           <Route path='/category/:name' component={Category} />
-          <Route path='/request/:id' />
+          <Route path='/request/:id' component={Request} />
         </Switch>
         <ScrollButton />
       </Router>

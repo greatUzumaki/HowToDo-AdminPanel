@@ -101,7 +101,11 @@ function Category() {
         {requests &&
           requests.map((item, index) => {
             return (
-              <Link to='#' className={classes.link} key={index}>
+              <Link
+                to={`/request/${item.id}`}
+                className={classes.link}
+                key={index}
+              >
                 <Card elevation={3} className={classes.card}>
                   <CardContent className={classes.cardConten}>
                     <Grid container direction='row'>
