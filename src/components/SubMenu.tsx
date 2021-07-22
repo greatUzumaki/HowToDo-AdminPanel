@@ -43,7 +43,32 @@ const DropdownLink = styled(Link)({
   },
 });
 
-const SubMenu = ({ item }) => {
+interface ISubMenu {
+  item:
+    | {
+        title: string;
+        path: string;
+        icon: JSX.Element;
+        iconClosed: JSX.Element;
+        iconOpened: JSX.Element;
+        subNav?: undefined;
+      }
+    | {
+        title: string;
+        path: string;
+        icon: JSX.Element;
+        iconClosed: JSX.Element;
+        iconOpened: JSX.Element;
+        subNav: {
+          path: string;
+          title: string;
+          icon: JSX.Element;
+        }[];
+      };
+  key: number;
+}
+
+const SubMenu = ({ item }: ISubMenu) => {
   const classes = useStyles();
   const [subnav, setSubnav] = useState(false);
 
@@ -65,6 +90,7 @@ const SubMenu = ({ item }) => {
         </div>
       </SidebarLink>
       {subnav &&
+        item.subNav &&
         item.subNav.map((item, index) => {
           return (
             <DropdownLink to={item.path} key={index}>

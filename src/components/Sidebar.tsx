@@ -33,6 +33,10 @@ const NavIcon = styled(Link)({
   marginRight: '2rem',
 });
 
+interface ISidebar {
+  sidebar: boolean;
+}
+
 const SidebarNav = styled('nav')({
   background: '#15171c',
   width: 250,
@@ -41,7 +45,7 @@ const SidebarNav = styled('nav')({
   justifyContent: 'center',
   position: 'fixed',
   top: 0,
-  left: ({ sidebar }) => (sidebar ? '0' : '-100%'),
+  left: (props: ISidebar) => (props.sidebar ? '0' : '-100%'),
   transition: '350ms',
   zIndex: 9,
 });
