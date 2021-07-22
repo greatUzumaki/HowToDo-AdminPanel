@@ -7,8 +7,10 @@ import {
   Typography,
 } from '@material-ui/core';
 import AcUnitIcon from '@material-ui/icons/AcUnit';
-import React from 'react';
+import { useSnackbar } from 'notistack';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { CategoryApi, Configuration, GetCategoryDto } from '../api';
 
 const useStyles = makeStyles({
   container: {
@@ -23,7 +25,7 @@ const useStyles = makeStyles({
   },
   card: {
     display: 'flex',
-    width: '5em',
+    width: '6em',
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
@@ -34,67 +36,61 @@ const useStyles = makeStyles({
     },
   },
   cardContent: {
+    paddingBottom: '16px !important',
     display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'space-around',
+    flexDirection: 'row',
+    justifyContent: 'center',
     alignItems: 'center',
     height: '4em',
-    width: '100%',
     textDecoration: 'none',
+    flexWrap: 'wrap',
+    textAlign: 'center',
   },
   link: {
     textDecoration: 'none',
   },
   text: {
-    fontSize: 18,
-  },
-  textContainer: {
-    display: 'flex',
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    textAlign: 'center',
-  },
-  icon: {
-    width: 60,
-    height: 60,
+    fontSize: 25,
   },
 });
 
-const info = [
-  { name: 'Программирование awdawdwdwad' },
-  { name: 'awdawd' },
-  { name: 'awdawd' },
-  { name: 'awdawd' },
-  { name: 'awdawd' },
-  { name: 'awdawd' },
-  { name: 'awdawd' },
-  { name: 'awdawd' },
-  { name: 'awdawd' },
-];
-
 function Category() {
   const classes = useStyles();
+  const { enqueueSnackbar } = useSnackbar();
+  const [categories, setCategories] = useState<GetCategoryDto[]>([]);
+
+  useEffect(() => {
+    const fetch = async () => {
+      const API = new CategoryApi(new Configuration({ basePath: '/api' }));
+      try {
+        const getCategories = (await API.getAllCategory()).data;
+        setCategories(getCategories);
+      } catch {
+        enqueueSnackbar('Проблемы с получением категорий', {
+          variant: 'error',
+        });
+      }
+    };
+    fetch();
+  }, [enqueueSnackbar]);
+
   return (
     <div className='category'>
       <Grid item className={classes.container}>
-        {info.map((item, index) => {
-          return (
-            <Link to='/awd' className={classes.link} key={index}>
-              <Card elevation={3} className={classes.card}>
-                <CardContent className={classes.cardContent}>
-                  <Icon className={classes.icon}>
-                    <AcUnitIcon className={classes.icon} />
-                  </Icon>
-                  <Grid item className={classes.textContainer}>
-                    <Typography className={classes.text}>
+        {categories &&
+          categories.map((item, index) => {
+            return (
+              <Link to='/awd' className={classes.link} key={index}>
+                <Card elevation={3} className={classes.card}>
+                  <CardContent className={classes.cardContent}>
+                    <Typography className={classes.text} variant='button'>
                       {item.name}
                     </Typography>
-                  </Grid>
-                </CardContent>
-              </Card>
-            </Link>
-          );
-        })}
+                  </CardContent>
+                </Card>
+              </Link>
+            );
+          })}
       </Grid>
     </div>
   );
