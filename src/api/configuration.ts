@@ -1,7 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 /**
- * HowToBuild API
+ * HowToDo API
  * On development stage.
  *
  * The version of the OpenAPI document: v0.1

@@ -6,8 +6,12 @@ import {
   makeStyles,
   Typography,
 } from '@material-ui/core';
-import React from 'react';
+import { useSnackbar } from 'notistack';
+import React, { useContext, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { Configuration, GetRequestDto, RequestApi } from '../api';
+import { Context } from '../context';
+const dateFormat = require('dateformat');
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -64,65 +68,91 @@ const useStyles = makeStyles((theme) => ({
   },
   main: {
     flexGrow: 1,
+    paddingTop: 12,
   },
 }));
 
-const info = [
-  { name: 'Программие', date: '18.20 10:10', type: 'физ. лицо' },
-  { name: 'awdawd' },
-  { name: 'awdawd' },
-  { name: 'awdawd' },
-  { name: 'awdawd' },
-  { name: 'awdawd' },
-  { name: 'awdawd' },
-  { name: 'awdawd' },
-  { name: 'awdawd' },
-];
-
 function Home() {
   const classes = useStyles();
+  const { enqueueSnackbar } = useSnackbar();
+  const [requests, setRequests] = useState<GetRequestDto[]>();
+
+  const context = useContext(Context);
+
+  useEffect(() => {
+    const fetch = async () => {
+      const API = new RequestApi(new Configuration({ basePath: '/api' }));
+      try {
+        const getRequests = (await API.getLatestRequest()).data;
+        setRequests(getRequests);
+      } catch {
+        enqueueSnackbar('Проблемы с получением заявок', {
+          variant: 'error',
+        });
+      }
+    };
+    fetch();
+  }, [enqueueSnackbar]);
+
   return (
     <Grid container direction='column' className={classes.container}>
       <Typography className={classes.pageTitle}>Последние заявки</Typography>
       <Divider className={classes.divider} />
       <Grid item className={classes.cardContainer}>
-        {info.map((item, index) => {
-          return (
-            <Link to='#' className={classes.link} key={index}>
-              <Card elevation={3} className={classes.card}>
-                <CardContent className={classes.cardConten}>
-                  <Grid container direction='row'>
-                    <Grid item className={classes.author}>
-                      <Typography>{item.name}</Typography>
-                      <Typography
-                        variant='subtitle1'
-                        style={{ fontSize: 12, alignSelf: 'flex-end' }}
-                      >
-                        {item.type}
-                      </Typography>
+        {requests &&
+          requests.map((item, index) => {
+            return (
+              <Link
+                to={`/category/${item.id}`}
+                className={classes.link}
+                key={index}
+              >
+                <Card elevation={3} className={classes.card}>
+                  <CardContent className={classes.cardConten}>
+                    <Grid container direction='row'>
+                      <Grid item className={classes.author}>
+                        <Typography>{item.customerName}</Typography>
+                        <Typography
+                          variant='subtitle1'
+                          style={{ fontSize: 12, alignSelf: 'flex-end' }}
+                        >
+                          {item.customerType === 'entity'
+                            ? 'организация'
+                            : 'физ.лицо'}
+                        </Typography>
+                      </Grid>
+                      <Grid item direction='row'>
+                        <Typography>
+                          {dateFormat(item.date, 'dd.mm')}
+                        </Typography>
+                      </Grid>
                     </Grid>
-                    <Grid item direction='row'>
-                      <Typography>{item.date}</Typography>
+                    <Divider />
+                    <Grid container direction='column' className={classes.main}>
+                      <Grid item direction='row' wrap='wrap'>
+                        <Typography variant='h5'>
+                          {item.requestTitle}
+                        </Typography>
+                      </Grid>
+                      <Grid item direction='row' wrap='wrap'>
+                        <Typography>{item.requestDetails}</Typography>
+                      </Grid>
                     </Grid>
-                  </Grid>
-                  <Divider />
-                  <Grid container direction='column' className={classes.main}>
-                    <Grid item direction='row' wrap='wrap'>
-                      <Typography>{item.name}</Typography>
+                    <Divider />
+                    <Grid container direction='row'>
+                      <Grid item>
+                        {
+                          context?.categories.find(
+                            (i) => i.id === item.categoryId
+                          )?.name
+                        }
+                      </Grid>
                     </Grid>
-                    <Grid item direction='row' wrap='wrap'>
-                      <Typography>{item.name}</Typography>
-                    </Grid>
-                  </Grid>
-                  <Divider />
-                  <Grid container direction='row'>
-                    <Grid item>Бизнес</Grid>
-                  </Grid>
-                </CardContent>
-              </Card>
-            </Link>
-          );
-        })}
+                  </CardContent>
+                </Card>
+              </Link>
+            );
+          })}
       </Grid>
     </Grid>
   );

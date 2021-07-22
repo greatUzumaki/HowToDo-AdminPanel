@@ -1,7 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 /**
- * HowToBuild API
+ * HowToDo API
  * On development stage.
  *
  * The version of the OpenAPI document: v0.1
@@ -422,15 +422,15 @@ export const CategoryApiAxiosParamCreator = function (configuration?: Configurat
         },
         /**
          * 
-         * @summary Получить все запросы по ID категории
-         * @param {string} categoryId 
+         * @summary Получить все запросы по названию категории
+         * @param {string} categoryName 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getRequestByCategory: async (categoryId: string, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'categoryId' is not null or undefined
-            assertParamExists('getRequestByCategory', 'categoryId', categoryId)
-            const localVarPath = `/category/{id}`;
+        getRequestByName: async (categoryName: string, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'categoryName' is not null or undefined
+            assertParamExists('getRequestByName', 'categoryName', categoryName)
+            const localVarPath = `/category/categoryRequests`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -442,8 +442,8 @@ export const CategoryApiAxiosParamCreator = function (configuration?: Configurat
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            if (categoryId !== undefined) {
-                localVarQueryParameter['category_id'] = categoryId;
+            if (categoryName !== undefined) {
+                localVarQueryParameter['category_name'] = categoryName;
             }
 
 
@@ -501,13 +501,13 @@ export const CategoryApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
-         * @summary Получить все запросы по ID категории
-         * @param {string} categoryId 
+         * @summary Получить все запросы по названию категории
+         * @param {string} categoryName 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getRequestByCategory(categoryId: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<GetRequestDto>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getRequestByCategory(categoryId, options);
+        async getRequestByName(categoryName: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<GetRequestDto>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getRequestByName(categoryName, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
     }
@@ -551,13 +551,13 @@ export const CategoryApiFactory = function (configuration?: Configuration, baseP
         },
         /**
          * 
-         * @summary Получить все запросы по ID категории
-         * @param {string} categoryId 
+         * @summary Получить все запросы по названию категории
+         * @param {string} categoryName 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getRequestByCategory(categoryId: string, options?: any): AxiosPromise<Array<GetRequestDto>> {
-            return localVarFp.getRequestByCategory(categoryId, options).then((request) => request(axios, basePath));
+        getRequestByName(categoryName: string, options?: any): AxiosPromise<Array<GetRequestDto>> {
+            return localVarFp.getRequestByName(categoryName, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -606,14 +606,14 @@ export class CategoryApi extends BaseAPI {
 
     /**
      * 
-     * @summary Получить все запросы по ID категории
-     * @param {string} categoryId 
+     * @summary Получить все запросы по названию категории
+     * @param {string} categoryName 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof CategoryApi
      */
-    public getRequestByCategory(categoryId: string, options?: any) {
-        return CategoryApiFp(this.configuration).getRequestByCategory(categoryId, options).then((request) => request(this.axios, this.basePath));
+    public getRequestByName(categoryName: string, options?: any) {
+        return CategoryApiFp(this.configuration).getRequestByName(categoryName, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
@@ -690,6 +690,43 @@ export const RequestApiAxiosParamCreator = function (configuration?: Configurati
                 options: localVarRequestOptions,
             };
         },
+        /**
+         * 
+         * @summary Получить запрос по id
+         * @param {string} requestId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getRequestById: async (requestId: string, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'requestId' is not null or undefined
+            assertParamExists('getRequestById', 'requestId', requestId)
+            const localVarPath = `/request`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            if (requestId !== undefined) {
+                localVarQueryParameter['request_id'] = requestId;
+            }
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
     }
 };
 
@@ -721,6 +758,17 @@ export const RequestApiFp = function(configuration?: Configuration) {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getLatestRequest(options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
+        /**
+         * 
+         * @summary Получить запрос по id
+         * @param {string} requestId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getRequestById(requestId: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GetRequestDto>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getRequestById(requestId, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
     }
 };
 
@@ -749,6 +797,16 @@ export const RequestApiFactory = function (configuration?: Configuration, basePa
          */
         getLatestRequest(options?: any): AxiosPromise<Array<GetRequestDto>> {
             return localVarFp.getLatestRequest(options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Получить запрос по id
+         * @param {string} requestId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getRequestById(requestId: string, options?: any): AxiosPromise<GetRequestDto> {
+            return localVarFp.getRequestById(requestId, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -781,6 +839,18 @@ export class RequestApi extends BaseAPI {
      */
     public getLatestRequest(options?: any) {
         return RequestApiFp(this.configuration).getLatestRequest(options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Получить запрос по id
+     * @param {string} requestId 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof RequestApi
+     */
+    public getRequestById(requestId: string, options?: any) {
+        return RequestApiFp(this.configuration).getRequestById(requestId, options).then((request) => request(this.axios, this.basePath));
     }
 }
 

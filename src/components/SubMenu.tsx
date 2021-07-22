@@ -1,6 +1,13 @@
 import { makeStyles, styled } from '@material-ui/core/styles';
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import * as RiIcons from 'react-icons/ri';
+import * as AiIcons from 'react-icons/ai';
+import * as FaIcons from 'react-icons/fa';
+import { useContext } from 'react';
+import { Context } from '../context';
+import * as IoIcons from 'react-icons/io';
+import { Grid } from '@material-ui/core';
 
 const useStyles = makeStyles({
   list: {
@@ -31,7 +38,7 @@ const SidebarLabel = styled('span')({ marginLeft: 16 });
 const DropdownLink = styled(Link)({
   background: '#414757',
   height: 60,
-  paddingLeft: '3rem',
+  paddingLeft: '2.5rem',
   display: 'flex',
   alignItems: 'center',
   textDecoration: 'none',
@@ -43,62 +50,67 @@ const DropdownLink = styled(Link)({
   },
 });
 
-interface ISubMenu {
-  item:
-    | {
-        title: string;
-        path: string;
-        icon: JSX.Element;
-        iconClosed: JSX.Element;
-        iconOpened: JSX.Element;
-        subNav?: undefined;
-      }
-    | {
-        title: string;
-        path: string;
-        icon: JSX.Element;
-        iconClosed: JSX.Element;
-        iconOpened: JSX.Element;
-        subNav: {
-          path: string;
-          title: string;
-          icon: JSX.Element;
-        }[];
-      };
-  key: number;
-}
-
-const SubMenu = ({ item }: ISubMenu) => {
+const SubMenu = () => {
   const classes = useStyles();
   const [subnav, setSubnav] = useState(false);
+  const context = useContext(Context);
+  const categories = context?.categories;
 
   const showSubnav = () => setSubnav(!subnav);
 
   return (
     <>
-      <SidebarLink to={item.path} onClick={item.subNav && showSubnav}>
+      <SidebarLink to='/home'>
         <div className={classes.list}>
-          {item.icon}
-          <SidebarLabel>{item.title}</SidebarLabel>
-        </div>
-        <div>
-          {item.subNav && subnav
-            ? item.iconOpened
-            : item.subNav
-            ? item.iconClosed
-            : null}
+          <AiIcons.AiFillHome />
+          <SidebarLabel>Главная</SidebarLabel>
         </div>
       </SidebarLink>
-      {subnav &&
-        item.subNav &&
-        item.subNav.map((item, index) => {
-          return (
-            <DropdownLink to={item.path} key={index}>
-              {item.icon}
-              <SidebarLabel>{item.title}</SidebarLabel>
-            </DropdownLink>
-          );
-        })}
+      <SidebarLink to='/category' onClick={showSubnav}>
+        <div className={classes.list}>
+          <FaIcons.FaListUl />
+          <SidebarLabel>Категории</SidebarLabel>
+        </div>
+        <div>
+          {subnav ? <RiIcons.RiArrowUpSFill /> : <RiIcons.RiArrowDownSFill />}
+        </div>
+      </SidebarLink>
+      <table>
+        <tr>
+          {subnav &&
+            categories &&
+            categories.map((item, index) => {
+              return (
+                <DropdownLink to={`/category/${item.name}`} key={index}>
+                  <IoIcons.IoIosArrowForward />
+                  <Grid
+                    item
+                    style={{
+                      display: 'flex',
+                      flexDirection: 'row',
+                      flexWrap: 'wrap',
+                      minWidth: 0,
+                      flex: 1,
+                      overflow: 'hidden',
+                      wordBreak: 'break-all',
+                    }}
+                  >
+                    <SidebarLabel>{item.name}</SidebarLabel>
+                  </Grid>
+                </DropdownLink>
+              );
+            })}
+        </tr>
+      </table>
+      <SidebarLink
+        to='/'
+        style={{ zIndex: -1, position: 'absolute', bottom: 0, width: '100%' }}
+      >
+        <div className={classes.list}>
+          <RiIcons.RiLogoutBoxLine />
+          <SidebarLabel>Выйти</SidebarLabel>
+        </div>
+      </SidebarLink>
     </>
   );
 };

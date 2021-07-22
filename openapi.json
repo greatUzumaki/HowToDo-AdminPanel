@@ -1,12 +1,54 @@
 {
   "openapi": "3.0.2",
   "info": {
-    "title": "HowToBuild API",
+    "title": "HowToDo API",
     "description": "On development stage.",
     "version": "v0.1"
   },
   "paths": {
     "/request": {
+      "get": {
+        "tags": ["request"],
+        "summary": "Получить запрос по id",
+        "operationId": "getRequestById",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Request Id",
+              "type": "string",
+              "format": "uuid"
+            },
+            "name": "request_id",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetRequestDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Не найдено запроса с таким ID"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
       "post": {
         "tags": ["request"],
         "summary": "Добавить запрос в БД",
@@ -172,20 +214,19 @@
         }
       }
     },
-    "/category/{id}": {
+    "/category/categoryRequests": {
       "get": {
         "tags": ["category"],
-        "summary": "Получить все запросы по ID категории",
-        "operationId": "getRequestByCategory",
+        "summary": "Получить все запросы по названию категории",
+        "operationId": "getRequestByName",
         "parameters": [
           {
             "required": true,
             "schema": {
-              "title": "Category Id",
-              "type": "string",
-              "format": "uuid"
+              "title": "Category Name",
+              "type": "string"
             },
-            "name": "category_id",
+            "name": "category_name",
             "in": "query"
           }
         ],
@@ -195,7 +236,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "title": "Response Get Request By Category Category  Id  Get",
+                  "title": "Response Get Request By Category Category Categoryrequests Get",
                   "type": "array",
                   "items": {
                     "$ref": "#/components/schemas/GetRequestDto"

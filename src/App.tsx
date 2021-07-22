@@ -6,6 +6,7 @@ import './App.css';
 import Sidebar from './components/Sidebar';
 import ScrollButton from './components/ToTopButton';
 import { Context } from './context';
+import AllCategory from './pages/AllCategory';
 import Category from './pages/Category';
 import Home from './pages/Home';
 import LoginPage from './pages/LoginPage';
@@ -13,6 +14,7 @@ import LoginPage from './pages/LoginPage';
 function App() {
   const { enqueueSnackbar } = useSnackbar();
   const [categories, setCategories] = useState<GetCategoryDto[]>([]);
+  const [categoryName, setCategoryName] = useState<string>('');
 
   useEffect(() => {
     const fetch = async () => {
@@ -30,15 +32,17 @@ function App() {
   }, [enqueueSnackbar]);
 
   return (
-    <Context.Provider value={{ categories, setCategories }}>
+    <Context.Provider
+      value={{ categories, setCategories, categoryName, setCategoryName }}
+    >
       <Router>
         <Sidebar />
         <Switch>
           <Route path='/home' exact component={Home} />
-          <Route path='/category' exact component={Category} />
+          <Route path='/category' exact component={AllCategory} />
           <Route path='/' exact component={LoginPage} />
-          <Route path='/category/:name' />
-          <Route path='/category/:name/:id' />
+          <Route path='/category/:name' component={Category} />
+          <Route path='/request/:id' />
         </Switch>
         <ScrollButton />
       </Router>

@@ -1,98 +1,145 @@
 import {
   Card,
   CardContent,
+  Divider,
   Grid,
-  Icon,
   makeStyles,
   Typography,
 } from '@material-ui/core';
-import AcUnitIcon from '@material-ui/icons/AcUnit';
 import { useSnackbar } from 'notistack';
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import { CategoryApi, Configuration, GetCategoryDto } from '../api';
+import { Link, useParams } from 'react-router-dom';
+import { CategoryApi, Configuration, GetRequestDto } from '../api';
+const dateFormat = require('dateformat');
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
   container: {
     display: 'flex',
-    flexDirection: 'row',
     height: 'max-content',
-    padding: 50,
+    padding: 20,
     width: '100%',
     justifyContent: 'center',
     flexWrap: 'wrap',
     alignItems: 'center',
   },
-  card: {
+  pageTitle: {
+    fontSize: 40,
+    textAlign: 'center',
+  },
+  divider: {
+    width: '50%',
+  },
+  cardContainer: {
     display: 'flex',
-    width: '6em',
-    flexDirection: 'column',
+    height: 'max-content',
+    padding: 20,
+    width: '100%',
+    flexDirection: 'row',
     justifyContent: 'center',
+    flexWrap: 'wrap',
     alignItems: 'center',
+  },
+  link: { textDecoration: 'none' },
+  card: {
+    [theme.breakpoints.down('sm')]: {
+      width: 330,
+    },
+    width: 500,
+    height: 250,
     margin: 20,
     '&:hover': {
-      transform: 'scale(1.1)',
+      transform: 'scale(1.05)',
       transition: '300ms',
     },
   },
-  cardContent: {
+  cardConten: {
+    display: 'flex',
+    flexDirection: 'column',
+    width: '100%',
+    height: ' 100%',
     paddingBottom: '16px !important',
+    wordBreak: 'break-all',
+  },
+  author: {
     display: 'flex',
     flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    height: '4em',
-    textDecoration: 'none',
     flexWrap: 'wrap',
-    textAlign: 'center',
+    flexGrow: 1,
   },
-  link: {
-    textDecoration: 'none',
+  main: {
+    flexGrow: 1,
+    paddingTop: 12,
   },
-  text: {
-    fontSize: 25,
-  },
-});
+}));
 
 function Category() {
   const classes = useStyles();
+  const [requests, setRequests] = useState<GetRequestDto[]>();
   const { enqueueSnackbar } = useSnackbar();
-  const [categories, setCategories] = useState<GetCategoryDto[]>([]);
 
+  const { name } = useParams<{ name: string }>();
   useEffect(() => {
-    const fetch = async () => {
+    const fetch = async (category: string) => {
       const API = new CategoryApi(new Configuration({ basePath: '/api' }));
       try {
-        const getCategories = (await API.getAllCategory()).data;
-        setCategories(getCategories);
+        const getRequests = (await API.getRequestByName(category)).data;
+        setRequests(getRequests);
       } catch {
-        enqueueSnackbar('Проблемы с получением категорий', {
+        enqueueSnackbar('Проблемы с получением заявок', {
           variant: 'error',
         });
       }
     };
-    fetch();
-  }, [enqueueSnackbar]);
+    fetch(name);
+  }, [enqueueSnackbar, name]);
 
   return (
-    <div className='category'>
-      <Grid item className={classes.container}>
-        {categories &&
-          categories.map((item, index) => {
+    <Grid container direction='column' className={classes.container}>
+      <Typography className={classes.pageTitle}>{name}</Typography>
+      <Divider className={classes.divider} />
+      <Grid item className={classes.cardContainer}>
+        {requests &&
+          requests.map((item, index) => {
             return (
-              <Link to='/awd' className={classes.link} key={index}>
+              <Link to='#' className={classes.link} key={index}>
                 <Card elevation={3} className={classes.card}>
-                  <CardContent className={classes.cardContent}>
-                    <Typography className={classes.text} variant='button'>
-                      {item.name}
-                    </Typography>
+                  <CardContent className={classes.cardConten}>
+                    <Grid container direction='row'>
+                      <Grid item className={classes.author}>
+                        <Typography>{item.customerName}</Typography>
+                        <Typography
+                          variant='subtitle1'
+                          style={{ fontSize: 12, alignSelf: 'flex-end' }}
+                        >
+                          {item.customerType === 'entity'
+                            ? 'организация'
+                            : 'физ.лицо'}
+                        </Typography>
+                      </Grid>
+                      <Grid item direction='row'>
+                        <Typography>
+                          {dateFormat(item.date, 'dd.mm')}
+                        </Typography>
+                      </Grid>
+                    </Grid>
+                    <Divider />
+                    <Grid container direction='column' className={classes.main}>
+                      <Grid item direction='row' wrap='wrap'>
+                        <Typography variant='h5'>
+                          {item.requestTitle}
+                        </Typography>
+                      </Grid>
+                      <Grid item direction='row' wrap='wrap'>
+                        <Typography>{item.requestDetails}</Typography>
+                      </Grid>
+                    </Grid>
                   </CardContent>
                 </Card>
               </Link>
             );
           })}
       </Grid>
-    </div>
+    </Grid>
   );
 }
 

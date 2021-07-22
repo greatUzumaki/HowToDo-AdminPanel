@@ -1,12 +1,11 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import * as FaIcons from 'react-icons/fa';
-import * as AiIcons from 'react-icons/ai';
-import { SidebarData } from './SidebarData';
-import SubMenu from './SubMenu';
-import { IconContext } from 'react-icons/lib';
-import { styled } from '@material-ui/core/styles';
 import { makeStyles, Typography } from '@material-ui/core';
+import { styled } from '@material-ui/core/styles';
+import React, { useState } from 'react';
+import * as AiIcons from 'react-icons/ai';
+import * as FaIcons from 'react-icons/fa';
+import { IconContext } from 'react-icons/lib';
+import { Link } from 'react-router-dom';
+import SubMenu from './SubMenu';
 
 const useStyle = makeStyles({
   title: { color: 'white', fontSize: '1.2rem' },
@@ -40,6 +39,7 @@ interface ISidebar {
 const SidebarNav = styled('nav')({
   background: '#15171c',
   width: 250,
+  overflow: 'auto',
   height: '100vh',
   display: 'flex',
   justifyContent: 'center',
@@ -72,9 +72,7 @@ const Sidebar = () => {
         <SidebarNav sidebar={sidebar}>
           <SidebarWrap>
             <NavIcon to='#' onClick={showSidebar}></NavIcon>
-            {SidebarData.map((item, index) => {
-              return <SubMenu item={item} key={index} />;
-            })}
+            <SubMenu />
           </SidebarWrap>
         </SidebarNav>
       </IconContext.Provider>
