@@ -363,7 +363,7 @@ export const CategoryApiAxiosParamCreator = function (configuration?: Configurat
         deleteCategory: async (categoryId: string, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'categoryId' is not null or undefined
             assertParamExists('deleteCategory', 'categoryId', categoryId)
-            const localVarPath = `/category`;
+            const localVarPath = `/categoryID`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -377,6 +377,43 @@ export const CategoryApiAxiosParamCreator = function (configuration?: Configurat
 
             if (categoryId !== undefined) {
                 localVarQueryParameter['category_id'] = categoryId;
+            }
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Удаление категории по названию
+         * @param {string} categoryName 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        deleteCategoryByName: async (categoryName: string, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'categoryName' is not null or undefined
+            assertParamExists('deleteCategoryByName', 'categoryName', categoryName)
+            const localVarPath = `/category`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            if (categoryName !== undefined) {
+                localVarQueryParameter['category_name'] = categoryName;
             }
 
 
@@ -491,6 +528,17 @@ export const CategoryApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @summary Удаление категории по названию
+         * @param {string} categoryName 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async deleteCategoryByName(categoryName: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<any>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.deleteCategoryByName(categoryName, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
          * @summary Получить все категории
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -539,6 +587,16 @@ export const CategoryApiFactory = function (configuration?: Configuration, baseP
          */
         deleteCategory(categoryId: string, options?: any): AxiosPromise<any> {
             return localVarFp.deleteCategory(categoryId, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Удаление категории по названию
+         * @param {string} categoryName 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        deleteCategoryByName(categoryName: string, options?: any): AxiosPromise<any> {
+            return localVarFp.deleteCategoryByName(categoryName, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -591,6 +649,18 @@ export class CategoryApi extends BaseAPI {
      */
     public deleteCategory(categoryId: string, options?: any) {
         return CategoryApiFp(this.configuration).deleteCategory(categoryId, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Удаление категории по названию
+     * @param {string} categoryName 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof CategoryApi
+     */
+    public deleteCategoryByName(categoryName: string, options?: any) {
+        return CategoryApiFp(this.configuration).deleteCategoryByName(categoryName, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

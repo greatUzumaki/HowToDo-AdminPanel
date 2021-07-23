@@ -77,10 +77,10 @@ const DeleteDialog = (props: IDialog) => {
   const { enqueueSnackbar } = useSnackbar();
 
   const deleteRequest = () => {
-    const fetch = () => {
+    const fetch = async () => {
       const API = new RequestApi(new Configuration({ basePath: '/api' }));
       try {
-        API.deleteRequest(props.id);
+        await API.deleteRequest(props.id);
         props.setClose(false);
         window.history.back();
       } catch {

@@ -1,12 +1,21 @@
 import {
+  Button,
   Card,
   CardContent,
+  CircularProgress,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
   Divider,
   Grid,
+  IconButton,
   makeStyles,
+  Tooltip,
   Typography,
-  CircularProgress,
 } from '@material-ui/core';
+import DeleteIcon from '@material-ui/icons/Delete';
 import { useSnackbar } from 'notistack';
 import React, { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
@@ -26,6 +35,7 @@ const useStyles = makeStyles((theme) => ({
   pageTitle: {
     fontSize: 40,
     textAlign: 'center',
+    wordBreak: 'break-all',
   },
   divider: {
     width: '50%',
@@ -73,11 +83,55 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+interface IDialog {
+  name: string;
+  open: boolean;
+  setClose: Function;
+}
+
+const DeleteDialog = (props: IDialog) => {
+  const { enqueueSnackbar } = useSnackbar();
+
+  const deleteCategory = () => {
+    const fetch = async () => {
+      const API = new CategoryApi(new Configuration({ basePath: '/api' }));
+      try {
+        await API.deleteCategoryByName(props.name);
+        props.setClose(false);
+        document.location.href = '/category';
+      } catch {
+        enqueueSnackbar('Ошибка при удалении категории', { variant: 'error' });
+      }
+    };
+    fetch();
+  };
+
+  return (
+    <Dialog open={props.open} onClose={() => props.setClose(false)}>
+      <DialogTitle id='responsive-dialog-title'>{'Подтверждение'}</DialogTitle>
+      <DialogContent>
+        <DialogContentText>
+          Вы уверены, что хотите удалить категорию {props.name}?
+        </DialogContentText>
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={() => props.setClose(false)} color='primary'>
+          Отмена
+        </Button>
+        <Button color='secondary' onClick={deleteCategory}>
+          Удалить
+        </Button>
+      </DialogActions>
+    </Dialog>
+  );
+};
+
 function Category() {
   const classes = useStyles();
   const [requests, setRequests] = useState<GetRequestDto[]>();
   const { enqueueSnackbar } = useSnackbar();
   const [loading, setLoading] = useState(true);
+  const [open, setOpen] = useState(false);
 
   const { name } = useParams<{ name: string }>();
 
@@ -99,7 +153,22 @@ function Category() {
 
   return (
     <Grid container direction='column' className={classes.container}>
-      <Typography className={classes.pageTitle}>{name}</Typography>
+      <Grid
+        item
+        style={{
+          display: 'flex',
+          flexDirection: 'row',
+          alignItems: 'center',
+          flexWrap: 'wrap',
+        }}
+      >
+        <Typography className={classes.pageTitle}>{name}</Typography>
+        <Tooltip title='Удалить категорию'>
+          <IconButton onClick={() => setOpen(true)}>
+            <DeleteIcon />
+          </IconButton>
+        </Tooltip>
+      </Grid>
       <Divider className={classes.divider} />
       <Grid item className={classes.cardContainer}>
         {loading ? (
@@ -154,6 +223,7 @@ function Category() {
             );
           })
         )}
+        <DeleteDialog open={open} name={name} setClose={setOpen} />
       </Grid>
     </Grid>
   );
