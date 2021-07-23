@@ -4,6 +4,7 @@ import {
   Grid,
   makeStyles,
   Typography,
+  CircularProgress,
 } from '@material-ui/core';
 import { useSnackbar } from 'notistack';
 import React, { useEffect, useState } from 'react';
@@ -59,6 +60,7 @@ function AllCategory() {
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
   const [categories, setCategories] = useState<GetCategoryDto[]>([]);
+  const [loading, setLoading] = useState(true);
 
   const context = useContext(Context);
 
@@ -68,6 +70,7 @@ function AllCategory() {
       try {
         const getCategories = (await API.getAllCategory()).data;
         setCategories(getCategories);
+        setLoading(false);
       } catch {
         enqueueSnackbar('Проблемы с получением категорий', {
           variant: 'error',
@@ -80,7 +83,10 @@ function AllCategory() {
   return (
     <div className='category'>
       <Grid item className={classes.container}>
-        {categories &&
+        {loading ? (
+          <CircularProgress />
+        ) : (
+          categories &&
           categories.map((item, index) => {
             return (
               <Link
@@ -98,7 +104,8 @@ function AllCategory() {
                 </Card>
               </Link>
             );
-          })}
+          })
+        )}
       </Grid>
     </div>
   );

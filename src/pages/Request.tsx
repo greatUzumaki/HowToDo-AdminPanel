@@ -1,10 +1,16 @@
 import {
   Button,
   Container,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
   Grid,
   makeStyles,
   Paper,
   Typography,
+  Dialog,
+  CircularProgress,
 } from '@material-ui/core';
 import { useSnackbar } from 'notistack';
 import React, { useEffect, useState } from 'react';
@@ -52,6 +58,7 @@ const useStyles = makeStyles({
     display: 'flex',
     flexDirection: 'row',
     paddingTop: 10,
+    flexWrap: 'wrap',
   },
   contacts: {
     display: 'flex',
@@ -60,11 +67,56 @@ const useStyles = makeStyles({
   },
 });
 
+interface IDialog {
+  id: string;
+  open: boolean;
+  setClose: Function;
+}
+
+const DeleteDialog = (props: IDialog) => {
+  const { enqueueSnackbar } = useSnackbar();
+
+  const deleteRequest = () => {
+    const fetch = () => {
+      const API = new RequestApi(new Configuration({ basePath: '/api' }));
+      try {
+        API.deleteRequest(props.id);
+        props.setClose(false);
+        window.history.back();
+      } catch {
+        enqueueSnackbar('Ошибка при удалении заявки', { variant: 'error' });
+      }
+    };
+    fetch();
+  };
+
+  return (
+    <Dialog open={props.open} onClose={() => props.setClose(false)}>
+      <DialogTitle id='responsive-dialog-title'>{'Подтверждение'}</DialogTitle>
+      <DialogContent>
+        <DialogContentText>
+          Вы уверены, что хотите удалить заявку?
+        </DialogContentText>
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={() => props.setClose(false)} color='primary'>
+          Отмена
+        </Button>
+        <Button color='secondary' onClick={deleteRequest}>
+          Удалить
+        </Button>
+      </DialogActions>
+    </Dialog>
+  );
+};
+
 function Request() {
   const { id } = useParams<{ id: string }>();
   const { enqueueSnackbar } = useSnackbar();
   const [request, setRequest] = useState<GetRequestDto>();
   const classes = useStyles();
+  const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetch = async (id: string) => {
@@ -72,8 +124,9 @@ function Request() {
       try {
         const getRequest = (await API.getRequestById(id)).data;
         setRequest(getRequest);
+        setLoading(false);
       } catch {
-        enqueueSnackbar('Проблемы с получением заявок', {
+        enqueueSnackbar('Проблемы с получением заявки', {
           variant: 'error',
         });
       }
@@ -83,71 +136,95 @@ function Request() {
 
   return (
     <Container className={classes.container}>
-      <Paper elevation={3} className={classes.paper}>
-        <Grid container className={classes.cardContainer}>
-          <Grid item className={classes.mainInfo}>
-            <Grid item className={classes.author}>
-              <Typography variant='h4'>{request?.requestTitle}</Typography>
-              <Grid
-                item
-                style={{
-                  display: 'flex',
-                  flexDirection: 'row',
-                  alignItems: 'baseline',
-                }}
-              >
-                <Typography
-                  variant='h6'
-                  style={{ wordBreak: 'break-all', marginRight: 5 }}
-                >
-                  {request?.customerName}
-                </Typography>
-                <Typography variant='subtitle2'>
-                  {request?.customerType === 'entity'
-                    ? 'организация'
-                    : 'физ.лицо'}
+      {loading ? (
+        <CircularProgress />
+      ) : (
+        <>
+          <Paper elevation={3} className={classes.paper}>
+            <Grid container className={classes.cardContainer}>
+              <Grid item className={classes.mainInfo}>
+                <Grid item className={classes.author}>
+                  <Typography variant='h4'>{request?.requestTitle}</Typography>
+                  <Grid
+                    item
+                    style={{
+                      display: 'flex',
+                      flexDirection: 'row',
+                      alignItems: 'baseline',
+                    }}
+                  >
+                    <Typography
+                      variant='h6'
+                      style={{ wordBreak: 'break-all', marginRight: 5 }}
+                    >
+                      {request?.customerName}
+                    </Typography>
+                    <Typography variant='subtitle2'>
+                      {request?.customerType === 'entity'
+                        ? 'организация'
+                        : 'физ.лицо'}
+                    </Typography>
+                  </Grid>
+                </Grid>
+                <Typography variant='button' style={{ fontSize: 18 }}>
+                  {dateFormat(request?.date, 'dd.mm')}
                 </Typography>
               </Grid>
-            </Grid>
-            <Typography variant='button' style={{ fontSize: 18 }}>
-              {dateFormat(request?.date, 'dd.mm')}
-            </Typography>
-          </Grid>
-          <Grid item className={classes.desc}>
-            <Typography>{request?.requestDetails}</Typography>
-          </Grid>
-          <Grid item className={classes.info}>
-            <Grid item className={classes.contacts}>
-              <Typography>
-                Номер телефона:{' '}
-                <a
-                  style={{ textDecoration: 'none', color: 'black' }}
-                  href={`tel:${request?.phone}`}
+              <Grid item className={classes.desc}>
+                <Typography>{request?.requestDetails}</Typography>
+              </Grid>
+              <Grid item className={classes.info}>
+                <Grid item className={classes.contacts}>
+                  <Typography>
+                    Номер телефона:{' '}
+                    <a
+                      style={{ textDecoration: 'none', color: 'black' }}
+                      href={`tel:${request?.phone}`}
+                    >
+                      {request?.phone}
+                    </a>
+                  </Typography>
+                  <Typography>
+                    Эл. почта:{' '}
+                    <a
+                      style={{ textDecoration: 'none', color: 'black' }}
+                      href={`mailto:${request?.email}`}
+                    >
+                      {request?.email}
+                    </a>
+                  </Typography>
+                </Grid>
+                <Button
+                  href='https://mai.ru'
+                  target='_blank'
+                  variant='outlined'
+                  endIcon={<LinkIcon />}
                 >
-                  {request?.phone}
-                </a>
-              </Typography>
-              <Typography>
-                Эл. почта:{' '}
-                <a
-                  style={{ textDecoration: 'none', color: 'black' }}
-                  href={`mailto:${request?.email}`}
-                >
-                  {request?.email}
-                </a>
-              </Typography>
+                  Материалы
+                </Button>
+              </Grid>
             </Grid>
+          </Paper>
+          <Grid
+            item
+            style={{
+              marginTop: 20,
+              display: 'flex',
+              width: '100%',
+              justifyContent: 'flex-end',
+            }}
+          >
             <Button
-              href='https://mai.ru'
-              target='_blank'
+              color='secondary'
               variant='outlined'
-              endIcon={<LinkIcon />}
+              onClick={() => setOpen(true)}
             >
-              Материалы
+              Удалить
             </Button>
           </Grid>
-        </Grid>
-      </Paper>
+          <DeleteDialog id={id} open={open} setClose={setOpen} />
+        </>
+      )}
     </Container>
   );
 }

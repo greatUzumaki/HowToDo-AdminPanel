@@ -5,6 +5,7 @@ import {
   Grid,
   makeStyles,
   Typography,
+  CircularProgress,
 } from '@material-ui/core';
 import { useSnackbar } from 'notistack';
 import React, { useContext, useEffect, useState } from 'react';
@@ -73,6 +74,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function Home() {
+  const [loading, setLoading] = useState(true);
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
   const [requests, setRequests] = useState<GetRequestDto[]>();
@@ -85,6 +87,7 @@ function Home() {
       try {
         const getRequests = (await API.getLatestRequest()).data;
         setRequests(getRequests);
+        setLoading(false);
       } catch {
         enqueueSnackbar('Проблемы с получением заявок', {
           variant: 'error',
@@ -99,7 +102,10 @@ function Home() {
       <Typography className={classes.pageTitle}>Последние заявки</Typography>
       <Divider className={classes.divider} />
       <Grid item className={classes.cardContainer}>
-        {requests &&
+        {loading ? (
+          <CircularProgress />
+        ) : (
+          requests &&
           requests.map((item, index) => {
             return (
               <Link
@@ -156,7 +162,8 @@ function Home() {
                 </Card>
               </Link>
             );
-          })}
+          })
+        )}
       </Grid>
     </Grid>
   );

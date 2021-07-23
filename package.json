@@ -30,7 +30,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "generate-code": "openapi-generator-cli generate --skip-validate-spec -g typescript-axios -i ./openapi.json -o ./src/api",
+    "generate-code": "openapi-generator-cli generate --skip-validate-spec -g typescript-axios -i http://127.0.0.1:8001/openapi.json -o ./src/api",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },

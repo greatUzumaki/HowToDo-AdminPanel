@@ -662,6 +662,43 @@ export const RequestApiAxiosParamCreator = function (configuration?: Configurati
         },
         /**
          * 
+         * @summary Удалить запрос по id
+         * @param {string} requestId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        deleteRequest: async (requestId: string, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'requestId' is not null or undefined
+            assertParamExists('deleteRequest', 'requestId', requestId)
+            const localVarPath = `/request`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            if (requestId !== undefined) {
+                localVarQueryParameter['request_id'] = requestId;
+            }
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
          * @summary Получить последние 9 заявок
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -750,6 +787,17 @@ export const RequestApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @summary Удалить запрос по id
+         * @param {string} requestId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async deleteRequest(requestId: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<any>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.deleteRequest(requestId, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
          * @summary Получить последние 9 заявок
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -791,6 +839,16 @@ export const RequestApiFactory = function (configuration?: Configuration, basePa
         },
         /**
          * 
+         * @summary Удалить запрос по id
+         * @param {string} requestId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        deleteRequest(requestId: string, options?: any): AxiosPromise<any> {
+            return localVarFp.deleteRequest(requestId, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
          * @summary Получить последние 9 заявок
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -828,6 +886,18 @@ export class RequestApi extends BaseAPI {
      */
     public createRequest(createRequestDto: CreateRequestDto, options?: any) {
         return RequestApiFp(this.configuration).createRequest(createRequestDto, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Удалить запрос по id
+     * @param {string} requestId 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof RequestApi
+     */
+    public deleteRequest(requestId: string, options?: any) {
+        return RequestApiFp(this.configuration).deleteRequest(requestId, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

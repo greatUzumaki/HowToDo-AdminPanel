@@ -5,6 +5,7 @@ import {
   Grid,
   makeStyles,
   Typography,
+  CircularProgress,
 } from '@material-ui/core';
 import { useSnackbar } from 'notistack';
 import React, { useEffect, useState } from 'react';
@@ -76,14 +77,17 @@ function Category() {
   const classes = useStyles();
   const [requests, setRequests] = useState<GetRequestDto[]>();
   const { enqueueSnackbar } = useSnackbar();
+  const [loading, setLoading] = useState(true);
 
   const { name } = useParams<{ name: string }>();
+
   useEffect(() => {
     const fetch = async (category: string) => {
       const API = new CategoryApi(new Configuration({ basePath: '/api' }));
       try {
         const getRequests = (await API.getRequestByName(category)).data;
         setRequests(getRequests);
+        setLoading(false);
       } catch {
         enqueueSnackbar('Проблемы с получением заявок', {
           variant: 'error',
@@ -98,7 +102,10 @@ function Category() {
       <Typography className={classes.pageTitle}>{name}</Typography>
       <Divider className={classes.divider} />
       <Grid item className={classes.cardContainer}>
-        {requests &&
+        {loading ? (
+          <CircularProgress />
+        ) : (
+          requests &&
           requests.map((item, index) => {
             return (
               <Link
@@ -145,7 +152,8 @@ function Category() {
                 </Card>
               </Link>
             );
-          })}
+          })
+        )}
       </Grid>
     </Grid>
   );
