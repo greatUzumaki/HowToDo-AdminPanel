@@ -5,6 +5,7 @@ import {
   makeStyles,
   Typography,
   CircularProgress,
+  Fab,
 } from '@material-ui/core';
 import { useSnackbar } from 'notistack';
 import React, { useEffect, useState } from 'react';
@@ -12,6 +13,7 @@ import { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { CategoryApi, Configuration, GetCategoryDto } from '../api';
 import { Context } from '../context';
+import AddIcon from '@material-ui/icons/Add';
 
 const useStyles = makeStyles({
   container: {
@@ -53,6 +55,16 @@ const useStyles = makeStyles({
   },
   text: {
     fontSize: 22,
+  },
+  add: {
+    color: 'white',
+    margin: 30,
+    backgroundColor: 'black',
+    '&:hover': {
+      transform: 'scale(1.05)',
+      transition: '300ms',
+      backgroundColor: '#000000c2',
+    },
   },
 });
 
@@ -106,6 +118,9 @@ function AllCategory() {
             );
           })
         )}
+        <Fab className={classes.add}>
+          <AddIcon style={{ fontSize: 55 }} />
+        </Fab>
       </Grid>
     </div>
   );
