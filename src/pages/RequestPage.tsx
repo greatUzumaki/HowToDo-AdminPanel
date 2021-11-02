@@ -10,6 +10,7 @@ import {
   Grid,
   makeStyles,
 } from '@material-ui/core';
+import Delete from '@material-ui/icons/Delete';
 import { useSnackbar } from 'notistack';
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
@@ -153,6 +154,7 @@ function RequestPage() {
               color='secondary'
               variant='outlined'
               onClick={() => setOpen(true)}
+              endIcon={<Delete />}
             >
               Удалить
             </Button>

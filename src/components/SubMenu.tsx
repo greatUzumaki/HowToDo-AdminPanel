@@ -31,6 +31,7 @@ const SidebarLink = styled(Link)({
     borderLeft: '4px solid #2283e6',
     cursor: 'pointer',
   },
+  transition: 'all .1s',
 });
 
 const SidebarLabel = styled('span')({ marginLeft: 16 });

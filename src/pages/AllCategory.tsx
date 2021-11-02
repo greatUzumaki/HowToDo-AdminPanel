@@ -42,9 +42,9 @@ const useStyles = makeStyles({
     alignItems: 'center',
     margin: 20,
     '&:hover': {
-      transform: 'scale(1.1)',
-      transition: '300ms',
+      transform: 'scale(1.05)',
     },
+    transition: 'all .2s',
   },
   cardContent: {
     paddingBottom: '16px !important',
@@ -70,9 +70,9 @@ const useStyles = makeStyles({
     backgroundColor: 'black',
     '&:hover': {
       transform: 'scale(1.05)',
-      transition: '300ms',
       backgroundColor: '#000000c2',
     },
+    transition: 'all .2s',
   },
   field: {
     padding: 20,
