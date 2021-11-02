@@ -119,7 +119,10 @@ export const Request = (props: IRequest) => {
             variant='outlined'
             endIcon={<LinkIcon />}
           >
-            Материалы
+            {props.request?.fileName === null ||
+            props.request?.fileName === undefined
+              ? 'Материалы'
+              : props.request.fileName}
           </Button>
         </Grid>
       </Grid>

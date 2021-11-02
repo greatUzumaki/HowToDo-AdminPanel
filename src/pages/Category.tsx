@@ -45,7 +45,7 @@ const useStyles = makeStyles((theme) => ({
     height: 'max-content',
     padding: 20,
     width: '100%',
-    flexDirection: 'row',
+    flexDirection: 'row-reverse',
     justifyContent: 'center',
     flexWrap: 'wrap',
     alignItems: 'center',
