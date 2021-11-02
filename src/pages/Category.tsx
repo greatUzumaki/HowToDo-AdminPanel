@@ -99,8 +99,11 @@ const DeleteDialog = (props: IDialog) => {
         await API.deleteCategoryByName(props.name);
         props.setClose(false);
         document.location.href = '/category';
-      } catch {
-        enqueueSnackbar('Ошибка при удалении категории', { variant: 'error' });
+        enqueueSnackbar('Категория удалена!', { variant: 'success' });
+      } catch (err) {
+        enqueueSnackbar('Ошибка при удалении категории', {
+          variant: 'error',
+        });
       }
     };
     fetch();
@@ -146,6 +149,7 @@ function Category() {
         enqueueSnackbar('Проблемы с получением заявок', {
           variant: 'error',
         });
+        setTimeout(() => fetch(name), 5000);
       }
     };
     fetch(name);

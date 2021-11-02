@@ -75,7 +75,7 @@ const SubMenu = () => {
           {subnav ? <RiIcons.RiArrowUpSFill /> : <RiIcons.RiArrowDownSFill />}
         </div>
       </SidebarLink>
-      <table>
+      <table style={{ width: '100%' }}>
         <tr>
           {subnav &&
             categories &&
@@ -104,7 +104,7 @@ const SubMenu = () => {
       </table>
       <SidebarLink
         to='/'
-        style={{ zIndex: -1, position: 'absolute', bottom: 0, width: '100%' }}
+        style={{ zIndex: 0, position: 'absolute', bottom: 0, width: '100%' }}
       >
         <div className={classes.list}>
           <RiIcons.RiLogoutBoxLine />

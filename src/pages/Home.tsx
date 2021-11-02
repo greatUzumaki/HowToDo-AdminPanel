@@ -50,9 +50,9 @@ const useStyles = makeStyles((theme) => ({
     height: 250,
     margin: 20,
     '&:hover': {
-      transform: 'scale(1.05)',
-      transition: '300ms',
+      transform: 'scale(1.03)',
     },
+    transition: 'all .2s',
   },
   cardConten: {
     display: 'flex',
@@ -92,6 +92,7 @@ function Home() {
         enqueueSnackbar('Проблемы с получением заявок', {
           variant: 'error',
         });
+        setTimeout(() => fetch(), 5000);
       }
     };
     fetch();

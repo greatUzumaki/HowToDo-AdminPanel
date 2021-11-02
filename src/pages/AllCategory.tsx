@@ -6,6 +6,13 @@ import {
   Typography,
   CircularProgress,
   Fab,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  TextField,
 } from '@material-ui/core';
 import { useSnackbar } from 'notistack';
 import React, { useEffect, useState } from 'react';
@@ -13,6 +20,7 @@ import { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { CategoryApi, Configuration, GetCategoryDto } from '../api';
 import { Context } from '../context';
+import axios from 'axios';
 import AddIcon from '@material-ui/icons/Add';
 
 const useStyles = makeStyles({
@@ -66,13 +74,87 @@ const useStyles = makeStyles({
       backgroundColor: '#000000c2',
     },
   },
+  field: {
+    padding: 20,
+  },
 });
+
+interface IDialog {
+  open: boolean;
+  setClose: Function;
+  setNew: (val: (old: number) => number) => void;
+}
+
+const AddDialog = (props: IDialog) => {
+  const classes = useStyles();
+  const { enqueueSnackbar } = useSnackbar();
+
+  const [value, setValue] = useState<string>('');
+
+  const addCategory = () => {
+    const fetch = async () => {
+      const API = new CategoryApi(new Configuration({ basePath: '/api' }));
+      try {
+        await API.createCategory(value);
+        props.setNew((old) => old + 1);
+        closeDialog();
+        enqueueSnackbar('Категория успешно добавлена!', {
+          variant: 'success',
+        });
+      } catch (error) {
+        if (axios.isAxiosError(error)) {
+          if (error.response?.status === 409) {
+            enqueueSnackbar('Категория с таким названием уже существует', {
+              variant: 'error',
+            });
+          } else {
+            enqueueSnackbar('Проблема с добавлением категории', {
+              variant: 'error',
+            });
+          }
+        }
+      }
+    };
+    fetch();
+  };
+
+  const closeDialog = () => {
+    props.setClose(false);
+    setValue('');
+  };
+
+  return (
+    <Dialog open={props.open} onClose={closeDialog}>
+      <DialogTitle>Добавление новой категории</DialogTitle>
+      <DialogContent>
+        <DialogContentText>Введите название категории:</DialogContentText>
+        <TextField
+          className={classes.field}
+          value={value}
+          variant='outlined'
+          onChange={(e) => setValue(e.target.value as string)}
+        />
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={closeDialog} color='default'>
+          Отмена
+        </Button>
+        <Button color='primary' onClick={addCategory}>
+          Добавить
+        </Button>
+      </DialogActions>
+    </Dialog>
+  );
+};
 
 function AllCategory() {
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
   const [categories, setCategories] = useState<GetCategoryDto[]>([]);
   const [loading, setLoading] = useState(true);
+
+  const [open, setOpen] = useState(false);
+  const [newCategory, setNew] = useState(0);
 
   const context = useContext(Context);
 
@@ -87,10 +169,11 @@ function AllCategory() {
         enqueueSnackbar('Проблемы с получением категорий', {
           variant: 'error',
         });
+        setTimeout(() => fetch(), 5000);
       }
     };
     fetch();
-  }, [enqueueSnackbar]);
+  }, [enqueueSnackbar, newCategory]);
 
   return (
     <div className='category'>
@@ -118,9 +201,12 @@ function AllCategory() {
             );
           })
         )}
-        <Fab className={classes.add}>
-          <AddIcon style={{ fontSize: 55 }} />
-        </Fab>
+        {!loading && (
+          <Fab className={classes.add} onClick={() => setOpen(true)}>
+            <AddIcon style={{ fontSize: 55 }} />
+          </Fab>
+        )}
+        <AddDialog open={open} setClose={setOpen} setNew={setNew} />
       </Grid>
     </div>
   );
