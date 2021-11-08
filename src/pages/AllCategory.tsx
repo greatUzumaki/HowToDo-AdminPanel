@@ -91,6 +91,8 @@ const AddDialog = (props: IDialog) => {
 
   const [value, setValue] = useState<string>('');
 
+  const context = useContext(Context);
+
   const addCategory = () => {
     const fetch = async () => {
       const API = new CategoryApi(new Configuration({ basePath: '/api' }));
@@ -98,6 +100,7 @@ const AddDialog = (props: IDialog) => {
         await API.createCategory(value);
         props.setNew((old) => old + 1);
         closeDialog();
+        context?.setHandler((old) => old + 1);
         enqueueSnackbar('Категория успешно добавлена!', {
           variant: 'success',
         });

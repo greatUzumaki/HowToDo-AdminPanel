@@ -18,6 +18,7 @@ function App() {
   const { enqueueSnackbar } = useSnackbar();
   const [categories, setCategories] = useState<GetCategoryDto[]>([]);
   const [categoryName, setCategoryName] = useState<string>('');
+  const [handler, setHandler] = useState(0);
 
   useEffect(() => {
     const fetch = async () => {
@@ -32,11 +33,17 @@ function App() {
       }
     };
     fetch();
-  }, [enqueueSnackbar]);
+  }, [enqueueSnackbar, handler]);
 
   return (
     <Context.Provider
-      value={{ categories, setCategories, categoryName, setCategoryName }}
+      value={{
+        categories,
+        setCategories,
+        categoryName,
+        setCategoryName,
+        setHandler: (v) => setHandler(v),
+      }}
     >
       <Router>
         <Sidebar />

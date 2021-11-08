@@ -17,10 +17,11 @@ import {
 } from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { useSnackbar } from 'notistack';
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { CategoryApi, Configuration, GetRequestDto } from '../api';
 import { useHistory } from 'react-router-dom';
+import { Context } from '../context';
 const dateFormat = require('dateformat');
 
 const useStyles = makeStyles((theme) => ({
@@ -95,12 +96,15 @@ const DeleteDialog = (props: IDialog) => {
   const { enqueueSnackbar } = useSnackbar();
   const history = useHistory();
 
+  const context = useContext(Context);
+
   const deleteCategory = () => {
     const fetch = async () => {
       const API = new CategoryApi(new Configuration({ basePath: '/api' }));
       try {
         await API.deleteCategoryByName(props.name);
         props.setClose(false);
+        context?.setHandler((old) => old + 1);
         history.push('/category');
         enqueueSnackbar('Категория удалена!', { variant: 'success' });
       } catch (err) {

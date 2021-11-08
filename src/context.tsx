@@ -6,6 +6,7 @@ interface IContext {
   setCategories: (category: GetCategoryDto[]) => void;
   setCategoryName: Function;
   categoryName: string;
+  setHandler: (val: (old: number) => number) => void;
 }
 
 export const Context = createContext<IContext | null>(null);

@@ -13,17 +13,9 @@ import {
 import Delete from '@material-ui/icons/Delete';
 import { useSnackbar } from 'notistack';
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import {
-  Configuration,
-  FeedbackApi,
-  GetFeedbackDto,
-  GetRequestDto,
-  RequestApi,
-} from '../api';
+import { useHistory, useParams } from 'react-router-dom';
+import { Configuration, FeedbackApi, GetFeedbackDto } from '../api';
 import { Feedback } from '../components/Feedback';
-import { Request } from '../components/Request';
-import { useHistory } from 'react-router-dom';
 
 const useStyles = makeStyles({
   container: {
