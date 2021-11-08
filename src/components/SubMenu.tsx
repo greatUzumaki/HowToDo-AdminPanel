@@ -25,6 +25,24 @@ const useStyles = makeStyles({
   },
 });
 
+const SidebarLinkExit = styled(Link)({
+  display: 'flex',
+  color: '#e1e9fc',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+  padding: 20,
+  listStyle: 'none',
+  height: 60,
+  textDecoration: 'none',
+  fontSize: 20,
+  '&:hover': {
+    background: '#252831',
+    borderLeft: '4px solid #FF5050',
+    cursor: 'pointer',
+  },
+  transition: 'all .1s',
+});
+
 const SidebarLink = styled(Link)({
   display: 'flex',
   color: '#e1e9fc',
@@ -107,7 +125,7 @@ const SubMenu = () => {
           <SidebarLabel>Обратная связь</SidebarLabel>
         </div>
       </SidebarLink>
-      <SidebarLink
+      <SidebarLinkExit
         to='/'
         style={{ zIndex: 0, position: 'absolute', bottom: 0, width: '100%' }}
       >
@@ -115,7 +133,7 @@ const SubMenu = () => {
           <RiIcons.RiLogoutBoxLine />
           <SidebarLabel>Выйти</SidebarLabel>
         </div>
-      </SidebarLink>
+      </SidebarLinkExit>
     </>
   );
 };
