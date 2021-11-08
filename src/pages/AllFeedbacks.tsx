@@ -1,17 +1,16 @@
 import {
   Card,
   CardContent,
+  CircularProgress,
   Divider,
   Grid,
   makeStyles,
   Typography,
-  CircularProgress,
 } from '@material-ui/core';
 import { useSnackbar } from 'notistack';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Configuration, GetRequestDto, RequestApi } from '../api';
-import { Context } from '../context';
+import { Configuration, FeedbackApi, GetFeedbackDto } from '../api';
 const dateFormat = require('dateformat');
 
 const useStyles = makeStyles((theme) => ({
@@ -47,8 +46,8 @@ const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.down('sm')]: {
       width: 330,
     },
-    width: 500,
-    height: 250,
+    width: 450,
+    height: 200,
     margin: 20,
     '&:hover': {
       transform: 'scale(1.03)',
@@ -67,6 +66,7 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: 'row',
     flexWrap: 'wrap',
     flexGrow: 1,
+    gap: 5,
   },
   main: {
     flexGrow: 1,
@@ -74,23 +74,21 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function Home() {
+function Feedback() {
   const [loading, setLoading] = useState(true);
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
-  const [requests, setRequests] = useState<GetRequestDto[]>([]);
-
-  const context = useContext(Context);
+  const [feedbacks, setFeedbacks] = useState<GetFeedbackDto[]>([]);
 
   useEffect(() => {
     const fetch = async () => {
-      const API = new RequestApi(new Configuration({ basePath: '/api' }));
+      const API = new FeedbackApi(new Configuration({ basePath: '/api' }));
       try {
-        const getRequests = (await API.getLatestRequest()).data;
-        setRequests(getRequests);
+        const getFeedbacks = (await API.getAllFeedback()).data;
+        setFeedbacks(getFeedbacks);
         setLoading(false);
       } catch {
-        enqueueSnackbar('Проблемы с получением заявок', {
+        enqueueSnackbar('Проблемы с получением фидбеков', {
           variant: 'error',
         });
         setTimeout(() => fetch(), 5000);
@@ -101,16 +99,16 @@ function Home() {
 
   return (
     <Grid container direction='column' className={classes.container}>
-      <Typography className={classes.pageTitle}>Последние заявки</Typography>
+      <Typography className={classes.pageTitle}>Обратная связь</Typography>
       <Divider className={classes.divider} />
       <Grid item className={classes.cardContainer}>
         {loading ? (
           <CircularProgress />
         ) : (
-          requests.map((item, index) => {
+          feedbacks.map((item, index) => {
             return (
               <Link
-                to={`/request/${item.id}`}
+                to={`/feedback/${item.id}`}
                 className={classes.link}
                 key={index}
               >
@@ -118,7 +116,7 @@ function Home() {
                   <CardContent className={classes.cardConten}>
                     <Grid container direction='row'>
                       <Grid item className={classes.author}>
-                        <Typography>{item.customerName}</Typography>
+                        <Typography>{item.email}</Typography>
                         <Typography
                           variant='subtitle1'
                           style={{
@@ -127,9 +125,7 @@ function Home() {
                             marginLeft: 5,
                           }}
                         >
-                          {item.customerType === 'entity'
-                            ? 'организация'
-                            : 'физ.лицо'}
+                          {item.phone}
                         </Typography>
                       </Grid>
                       <Grid item direction='row'>
@@ -141,22 +137,7 @@ function Home() {
                     <Divider />
                     <Grid container direction='column' className={classes.main}>
                       <Grid item direction='row' wrap='wrap'>
-                        <Typography variant='h5'>
-                          {item.requestTitle}
-                        </Typography>
-                      </Grid>
-                      <Grid item direction='row' wrap='wrap'>
-                        <Typography>{item.requestDetails}</Typography>
-                      </Grid>
-                    </Grid>
-                    <Divider />
-                    <Grid container direction='row'>
-                      <Grid item>
-                        {
-                          context?.categories.find(
-                            (i) => i.id === item.categoryId
-                          )?.name
-                        }
+                        <Typography>{item.details}</Typography>
                       </Grid>
                     </Grid>
                   </CardContent>
@@ -170,4 +151,4 @@ function Home() {
   );
 }
 
-export default Home;
+export default Feedback;

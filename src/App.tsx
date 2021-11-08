@@ -8,9 +8,11 @@ import ScrollButton from './components/ToTopButton';
 import { Context } from './context';
 import AllCategory from './pages/AllCategory';
 import Category from './pages/Category';
+import AllFeedbacks from './pages/AllFeedbacks';
 import Home from './pages/Home';
 import LoginPage from './pages/LoginPage';
 import RequestPage from './pages/RequestPage';
+import FeedbackPage from './pages/FeedbackPage';
 
 function App() {
   const { enqueueSnackbar } = useSnackbar();
@@ -44,6 +46,9 @@ function App() {
           <Route path='/' exact component={LoginPage} />
           <Route path='/category/:name' component={Category} />
           <Route path='/request/:id' component={RequestPage} />
+
+          <Route path='/feedback' exact component={AllFeedbacks} />
+          <Route path='/feedback/:id' component={FeedbackPage} />
         </Switch>
         <ScrollButton />
       </Router>

@@ -20,6 +20,7 @@ import { useSnackbar } from 'notistack';
 import React, { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { CategoryApi, Configuration, GetRequestDto } from '../api';
+import { useHistory } from 'react-router-dom';
 const dateFormat = require('dateformat');
 
 const useStyles = makeStyles((theme) => ({
@@ -34,6 +35,7 @@ const useStyles = makeStyles((theme) => ({
   },
   pageTitle: {
     fontSize: 40,
+    fontWeight: 500,
     textAlign: 'center',
     wordBreak: 'break-all',
   },
@@ -60,8 +62,8 @@ const useStyles = makeStyles((theme) => ({
     margin: 20,
     '&:hover': {
       transform: 'scale(1.05)',
-      transition: '300ms',
     },
+    transition: '250ms',
   },
   cardConten: {
     display: 'flex',
@@ -91,6 +93,7 @@ interface IDialog {
 
 const DeleteDialog = (props: IDialog) => {
   const { enqueueSnackbar } = useSnackbar();
+  const history = useHistory();
 
   const deleteCategory = () => {
     const fetch = async () => {
@@ -98,7 +101,7 @@ const DeleteDialog = (props: IDialog) => {
       try {
         await API.deleteCategoryByName(props.name);
         props.setClose(false);
-        document.location.href = '/category';
+        history.push('/category');
         enqueueSnackbar('Категория удалена!', { variant: 'success' });
       } catch (err) {
         enqueueSnackbar('Ошибка при удалении категории', {

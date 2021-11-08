@@ -14,19 +14,27 @@ import Delete from '@material-ui/icons/Delete';
 import { useSnackbar } from 'notistack';
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { Configuration, GetRequestDto, RequestApi } from '../api';
+import {
+  Configuration,
+  FeedbackApi,
+  GetFeedbackDto,
+  GetRequestDto,
+  RequestApi,
+} from '../api';
+import { Feedback } from '../components/Feedback';
 import { Request } from '../components/Request';
 import { useHistory } from 'react-router-dom';
 
 const useStyles = makeStyles({
   container: {
     display: 'flex',
-    height: 'max-content',
+    minHeight: '90vh',
     padding: 20,
     width: '100%',
     justifyContent: 'center',
     flexWrap: 'wrap',
     alignItems: 'center',
+    flexDirection: 'column',
   },
   paper: {
     height: 500,
@@ -76,16 +84,16 @@ const DeleteDialog = (props: IDialog) => {
   const { enqueueSnackbar } = useSnackbar();
   const history = useHistory();
 
-  const deleteRequest = () => {
+  const deleteFeedback = () => {
     const fetch = async () => {
-      const API = new RequestApi(new Configuration({ basePath: '/api' }));
+      const API = new FeedbackApi(new Configuration({ basePath: '/api' }));
       try {
-        await API.deleteRequest(props.id);
+        await API.deleteFeedback(props.id);
         props.setClose(false);
-        history.goBack();
-        enqueueSnackbar('Заявка удалена!', { variant: 'success' });
+        history.push('/feedback');
+        enqueueSnackbar('Фидбек удален!', { variant: 'success' });
       } catch {
-        enqueueSnackbar('Ошибка при удалении заявки', { variant: 'error' });
+        enqueueSnackbar('Ошибка при удалении фидбека', { variant: 'error' });
       }
     };
     fetch();
@@ -96,14 +104,14 @@ const DeleteDialog = (props: IDialog) => {
       <DialogTitle id='responsive-dialog-title'>{'Подтверждение'}</DialogTitle>
       <DialogContent>
         <DialogContentText>
-          Вы уверены, что хотите удалить заявку?
+          Вы уверены, что хотите удалить обращение пользователя?
         </DialogContentText>
       </DialogContent>
       <DialogActions>
         <Button onClick={() => props.setClose(false)} color='primary'>
           Отмена
         </Button>
-        <Button color='secondary' onClick={deleteRequest}>
+        <Button color='secondary' onClick={deleteFeedback}>
           Удалить
         </Button>
       </DialogActions>
@@ -111,23 +119,23 @@ const DeleteDialog = (props: IDialog) => {
   );
 };
 
-function RequestPage() {
+function FeedbackPage() {
   const { id } = useParams<{ id: string }>();
   const { enqueueSnackbar } = useSnackbar();
-  const [request, setRequest] = useState<GetRequestDto>();
+  const [feedback, setFeedback] = useState<GetFeedbackDto>();
   const classes = useStyles();
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetch = async (id: string) => {
-      const API = new RequestApi(new Configuration({ basePath: '/api' }));
+      const API = new FeedbackApi(new Configuration({ basePath: '/api' }));
       try {
-        const getRequest = (await API.getRequestById(id)).data;
-        setRequest(getRequest);
+        const getFeedback = (await API.getFeedbackById(id)).data;
+        setFeedback(getFeedback);
         setLoading(false);
       } catch {
-        enqueueSnackbar('Проблемы с получением заявки', {
+        enqueueSnackbar('Проблемы с получением информации', {
           variant: 'error',
         });
         setTimeout(() => fetch(id), 5000);
@@ -142,14 +150,14 @@ function RequestPage() {
         <CircularProgress />
       ) : (
         <>
-          <Request request={request} />
+          <Feedback feedback={feedback} />
           <Grid
             item
             style={{
               marginTop: 20,
               display: 'flex',
               width: '100%',
-              justifyContent: 'flex-end',
+              justifyContent: 'center',
             }}
           >
             <Button
@@ -157,6 +165,7 @@ function RequestPage() {
               variant='outlined'
               onClick={() => setOpen(true)}
               endIcon={<Delete />}
+              style={{ width: 300 }}
             >
               Удалить
             </Button>
@@ -168,4 +177,4 @@ function RequestPage() {
   );
 }
 
-export default RequestPage;
+export default FeedbackPage;

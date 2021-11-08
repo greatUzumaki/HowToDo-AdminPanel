@@ -14,6 +14,15 @@ const useStyles = makeStyles({
     display: 'flex',
     alignItems: 'center',
   },
+  dropdownLink: {
+    display: 'flex',
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    minWidth: 0,
+    flex: 1,
+    overflow: 'hidden',
+    wordBreak: 'break-all',
+  },
 });
 
 const SidebarLink = styled(Link)({
@@ -39,7 +48,7 @@ const SidebarLabel = styled('span')({ marginLeft: 16 });
 const DropdownLink = styled(Link)({
   background: '#414757',
   height: 60,
-  paddingLeft: '2.5rem',
+  paddingLeft: '2rem',
   display: 'flex',
   alignItems: 'center',
   textDecoration: 'none',
@@ -84,18 +93,7 @@ const SubMenu = () => {
               return (
                 <DropdownLink to={`/category/${item.name}`} key={index}>
                   <IoIcons.IoIosArrowForward />
-                  <Grid
-                    item
-                    style={{
-                      display: 'flex',
-                      flexDirection: 'row',
-                      flexWrap: 'wrap',
-                      minWidth: 0,
-                      flex: 1,
-                      overflow: 'hidden',
-                      wordBreak: 'break-all',
-                    }}
-                  >
+                  <Grid item className={classes.dropdownLink}>
                     <SidebarLabel>{item.name}</SidebarLabel>
                   </Grid>
                 </DropdownLink>
@@ -103,6 +101,12 @@ const SubMenu = () => {
             })}
         </tr>
       </table>
+      <SidebarLink to='/feedback'>
+        <div className={classes.list}>
+          <RiIcons.RiFeedbackLine />
+          <SidebarLabel>Обратная связь</SidebarLabel>
+        </div>
+      </SidebarLink>
       <SidebarLink
         to='/'
         style={{ zIndex: 0, position: 'absolute', bottom: 0, width: '100%' }}
